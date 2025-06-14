@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/proactively/static/css/main.fd58fb0c.css",
+    "main.js": "/proactively/static/js/main.0343da41.js",
+    "static/js/453.b7a2f23b.chunk.js": "/proactively/static/js/453.b7a2f23b.chunk.js",
+    "static/media/hero-cooking.jpg": "/proactively/static/media/hero-cooking.e4e335393707aeea0fb6.jpg",
+    "static/media/nutrition.jpg": "/proactively/static/media/nutrition.f5a225abfe7bc27ef9c5.jpg",
+    "static/media/stress-management.jpg": "/proactively/static/media/stress-management.764cebc0fdc5eff1a927.jpg",
+    "static/media/hero-doctor.jpg": "/proactively/static/media/hero-doctor.81445c4ddb485747b563.jpg",
+    "static/media/hero-beach.jpg": "/proactively/static/media/hero-beach.cea6a539b3793f5801e6.jpg",
+    "static/media/substance-abuse.jpg": "/proactively/static/media/substance-abuse.6e20aa221b155612761b.jpg",
+    "static/media/social-connection.jpg": "/proactively/static/media/social-connection.5d22c645088ba8161e7d.jpg",
+    "static/media/physical-activity.jpg": "/proactively/static/media/physical-activity.9c60a6093a1435b0e6fb.jpg",
+    "static/media/hero-yoga.jpg": "/proactively/static/media/hero-yoga.c5dba17955ad7af063e2.jpg",
+    "static/media/sleep.jpg": "/proactively/static/media/sleep.411a570fc1ad094e0bf9.jpg",
+    "index.html": "/proactively/index.html",
+    "main.fd58fb0c.css.map": "/proactively/static/css/main.fd58fb0c.css.map",
+    "main.0343da41.js.map": "/proactively/static/js/main.0343da41.js.map",
+    "453.b7a2f23b.chunk.js.map": "/proactively/static/js/453.b7a2f23b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fd58fb0c.css",
+    "static/js/main.0343da41.js"
+  ]
+}
