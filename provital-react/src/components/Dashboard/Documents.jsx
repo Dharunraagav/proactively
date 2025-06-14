@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faEye, faUpload, faFile } from '@fortawesome/free-solid-svg-icons';
-import { supabase } from '../../supabase';
 import './Dashboard.css';
 
 const Documents = () => {
@@ -16,21 +15,25 @@ const Documents = () => {
 
   const fetchDocuments = async () => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      
-      if (!userData.user) {
-        setError('Please log in to view documents');
-        return;
-      }
+      // Simulate fetching documents for static site
+      const staticDocuments = [
+        {
+          id: 1,
+          file_name: 'Document1.pdf',
+          description: 'Uploaded document: Document1.pdf',
+          uploaded_at: '2023-10-01T10:00:00Z',
+          file_path: 'documents/user123/1664617200000.pdf'
+        },
+        {
+          id: 2,
+          file_name: 'Document2.jpg',
+          description: 'Uploaded document: Document2.jpg',
+          uploaded_at: '2023-09-15T10:00:00Z',
+          file_path: 'documents/user123/1663245600000.jpg'
+        }
+      ];
 
-      const { data, error } = await supabase
-        .from('consultation_documents')
-        .select('*')
-        .eq('uploaded_by', userData.user.id)
-        .order('uploaded_at', { ascending: false });
-
-      if (error) throw error;
-      setDocuments(data || []);
+      setDocuments(staticDocuments);
     } catch (error) {
       setError('Error fetching documents');
       console.error('Error:', error);
@@ -45,40 +48,16 @@ const Documents = () => {
 
     setUploading(true);
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      
-      if (!userData.user) {
-        setError('Please log in to upload documents');
-        return;
-      }
+      // Simulate file upload for static site
+      const newDocument = {
+        id: documents.length + 1,
+        file_name: file.name,
+        description: `Uploaded document: ${file.name}`,
+        uploaded_at: new Date().toISOString(),
+        file_path: `documents/user123/${Date.now()}.${file.name.split('.').pop()}`
+      };
 
-      // Upload file to Supabase storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `documents/${userData.user.id}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      // Save document metadata to database
-      const { error: dbError } = await supabase
-        .from('consultation_documents')
-        .insert([
-          {
-            consultation_id: null, // Can be linked to specific consultation later
-            file_path: filePath,
-            file_name: file.name,
-            description: `Uploaded document: ${file.name}`,
-            uploaded_by: userData.user.id
-          }
-        ]);
-
-      if (dbError) throw dbError;
-      
-      fetchDocuments();
+      setDocuments([...documents, newDocument]);
       event.target.value = ''; // Reset file input
     } catch (error) {
       setError('Error uploading document');
@@ -89,25 +68,15 @@ const Documents = () => {
   };
 
   const downloadDocument = async (filePath, fileName) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('documents')
-        .download(filePath);
-
-      if (error) throw error;
-
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      setError('Error downloading document');
-      console.error('Error:', error);
-    }
+    // Simulate document download
+    const url = URL.createObjectURL(new Blob());
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   if (loading) return <div className="dashboard-content">Loading...</div>;

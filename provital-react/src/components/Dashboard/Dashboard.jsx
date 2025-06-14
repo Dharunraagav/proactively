@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
-import { supabase } from '../../supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faHome, 
@@ -42,91 +41,8 @@ const Profile = () => {
   }, []);
 
   const fetchProfile = async () => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      
-      if (!userData.user) {
-        setError('Please log in to view profile');
-        return;
-      }
-
-      // Try to fetch from profiles table first
-      let profileData = null;
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', userData.user.id)
-          .single();
-
-        if (error && error.code !== 'PGRST116') {
-          console.warn('Profiles table might not exist:', error);
-        } else if (data) {
-          profileData = data;
-        }
-      } catch (tableError) {
-        console.warn('Profiles table access error:', tableError);
-      }
-
-      if (profileData) {
-        setProfile(profileData);
-        setFormData({
-          full_name: profileData.full_name || '',
-          avatar_url: profileData.avatar_url || '',
-          role: profileData.role || 'User'
-        });
-      } else {
-        // Use auth metadata or create default profile
-        const userMetadata = userData.user.user_metadata || {};
-        const defaultProfile = {
-          id: userData.user.id,
-          full_name: userMetadata.first_name && userMetadata.last_name 
-            ? `${userMetadata.first_name} ${userMetadata.last_name}`
-            : userData.user.email?.split('@')[0] || 'User',
-          avatar_url: '',
-          role: userMetadata.user_type === 'doctor' ? 'Healthcare Provider' : 'Patient'
-        };
-        
-        // Try to create profile in database, but don't fail if table doesn't exist
-        try {
-          const { error: insertError } = await supabase
-            .from('profiles')
-            .insert([defaultProfile]);
-
-          if (!insertError) {
-            setProfile(defaultProfile);
-          }
-        } catch (insertError) {
-          console.warn('Could not create profile in database:', insertError);
-        }
-        
-        // Set form data regardless of database operation
-        setFormData({
-          full_name: defaultProfile.full_name,
-          avatar_url: defaultProfile.avatar_url,
-          role: defaultProfile.role
-        });
-        setProfile(defaultProfile);
-      }
-    } catch (error) {
-      console.error('Error in fetchProfile:', error);
-      // Fallback to basic user info
-      const { data: userData } = await supabase.auth.getUser();
-      if (userData.user) {
-        const fallbackProfile = {
-          id: userData.user.id,
-          full_name: userData.user.email?.split('@')[0] || 'User',
-          avatar_url: '',
-          role: 'User'
-        };
-        setProfile(fallbackProfile);
-        setFormData(fallbackProfile);
-      } else {
-        setError('Unable to load profile');
-      }
-    } finally {
-      setLoading(false);
-    }
+    // Static site - no profile fetching logic
+    setLoading(false);
   };
 
   const handleEdit = () => {
@@ -145,49 +61,8 @@ const Profile = () => {
   };
 
   const handleSave = async () => {
-    try {
-      setLoading(true);
-      const { data: userData } = await supabase.auth.getUser();
-      
-      if (!userData.user) {
-        setError('Please log in to update profile');
-        return;
-      }
-
-      const updatedProfile = {
-        id: userData.user.id,
-        full_name: formData.full_name,
-        avatar_url: formData.avatar_url,
-        role: formData.role,
-        updated_at: new Date().toISOString()
-      };
-
-      // Try to save to database
-      try {
-        const { error } = await supabase
-          .from('profiles')
-          .upsert([updatedProfile]);
-
-        if (error) {
-          console.warn('Database update failed:', error);
-          setError('Profile updated locally (database not available)');
-        } else {
-          setError(null);
-        }
-      } catch (dbError) {
-        console.warn('Database operation failed:', dbError);
-        setError('Profile updated locally (database not available)');
-      }
-
-      // Update local state regardless of database operation
-      setProfile(updatedProfile);
-      setEditing(false);
-    } catch (error) {
-      setError('Error updating profile');
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
+    // Static site - no save logic
+    setEditing(false);
   };
 
   const handleInputChange = (e) => {
@@ -292,24 +167,13 @@ const Dashboard = () => {
   }, []);
 
   const checkUser = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    } catch (error) {
-      console.error('Error checking user:', error);
-    } finally {
-      setLoading(false);
-    }
+    // Static site - no user checking logic
+    setLoading(false);
   };
 
   const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+    // Static site - no sign out logic
+    navigate('/login');
   };
 
   if (loading) {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarPlus, faFileAlt, faCheckCircle, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
-import { supabase } from '../../supabase';
 import './Dashboard.css';
 
 const Consultations = () => {
@@ -19,28 +18,7 @@ const Consultations = () => {
 
   const fetchConsultations = async () => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      
-      if (!userData.user) {
-        setError('Please log in to view consultations');
-        return;
-      }
-      
-      const { data, error } = await supabase
-        .from('consultation_requests')
-        .select(`
-          *,
-          consultation_documents (
-            id,
-            file_name,
-            description
-          )
-        `)
-        .eq('user_id', userData.user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setConsultations(data || []);
+      setLoading(false);
     } catch (error) {
       setError('Error fetching consultations');
       console.error('Error:', error);
@@ -54,26 +32,6 @@ const Consultations = () => {
     setLoading(true);
 
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      
-      if (!userData.user) {
-        setError('Please log in to submit a consultation request');
-        return;
-      }
-      
-      const { error } = await supabase
-        .from('consultation_requests')
-        .insert([
-          {
-            user_id: userData.user.id,
-            project_summary: newRequest.project_summary,
-            goals: newRequest.goals,
-            status: 'pending'
-          }
-        ]);
-
-      if (error) throw error;
-
       setNewRequest({ project_summary: '', goals: '' });
       fetchConsultations();
     } catch (error) {

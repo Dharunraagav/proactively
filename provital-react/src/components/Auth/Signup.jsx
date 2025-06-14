@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabase';
 import './Auth.css';
 
 const Signup = () => {
@@ -41,32 +40,13 @@ const Signup = () => {
       return;
     }
 
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            user_type: formData.userType
-          }
-        }
-      });
+    // Static site - remove supabase signup logic
+    setSuccess(true);
+    setTimeout(() => {
+      navigate('/login');
+    }, 2000);
 
-      if (error) throw error;
-
-      if (data?.user) {
-        setSuccess(true);
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   if (success) {
